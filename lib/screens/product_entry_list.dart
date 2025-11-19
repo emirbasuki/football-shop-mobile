@@ -112,7 +112,7 @@ class _ProductEntryListPageState extends State<ShopEntryListPage> {
               return const Column(
                 children: [
                   Text(
-                    'There are no shop in football shop yet.',
+                    'There are no product in football shop yet.',
                     style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
                   ),
                   SizedBox(height: 8),
