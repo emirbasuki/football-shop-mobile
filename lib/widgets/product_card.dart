@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:football_shop/screens/shoplist_form.dart';
+import 'package:football_shop/screens/product_entry_list.dart';
+import 'package:football_shop/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ItemHomepage {
   final String name;
@@ -18,6 +22,7 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Material(
       // Menentukan warna latar belakang dari tema aplikasi.
       color: item.color,
@@ -26,7 +31,7 @@ class ItemCard extends StatelessWidget {
 
       child: InkWell(
         // Aksi ketika kartu ditekan.
-        onTap: () {
+        onTap: () async {
           // Menampilkan pesan SnackBar saat kartu ditekan.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -35,13 +40,57 @@ class ItemCard extends StatelessWidget {
             );
           // Navigate ke route yang sesuai (tergantung jenis tombol)
           if (item.name == "Create Product") {
-            // : Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ProductFormPage.
+            // Navigate to Product form
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const ProductFormPage(),
               ),
             );
+          } else if (item.name == "All Products") {
+            // Show all products
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ShopEntryListPage(),
+              ),
+            );
+          } else if (item.name == "My Products") {
+            // Show only products created by current user
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ShopEntryListPage(onlyMy: true),
+              ),
+            );
+          }
+          // Add this after your previous if statements
+          else if (item.name == "Logout") {
+              // TODO: Replace the URL with your app's URL and don't forget to add a trailing slash (/)!
+              // To connect Android emulator with Django on localhost, use URL http://10.0.2.2/
+              // If you using chrome,  use URL http://localhost:8000
+              
+              final response = await request.logout(
+                  "http://localhost:8000/auth/logout/");
+              String message = response["message"];
+              if (context.mounted) {
+                  if (response['status']) {
+                      String uname = response["username"];
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$message See you again, $uname."),
+                      ));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                  } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(message),
+                          ),
+                      );
+                  }
+              }
           }
         },
         // Container untuk menyimpan Icon dan Text

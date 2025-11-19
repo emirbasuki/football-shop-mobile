@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:football_shop/screens/menu.dart';
 // : Impor halaman ProductFormPage jika sudah dibuat
 import 'package:football_shop/screens/shoplist_form.dart';
+import 'package:football_shop/screens/product_entry_list.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -68,11 +69,28 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
-          // ListTile baru untuk ke halaman melihat product
-          // ListTile(
-          //   leading: const Icon(Icons.newspaper),
-          //   title: const Text('See Product'),
-          // ),
+          ListTile(
+            leading: const Icon(Icons.inventory),
+            title: const Text('Product List'),
+            onTap: () {
+                // Route to product list page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ShopEntryListPage()),
+                );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text('My Product'),
+            onTap: () {
+                // Route to my products (filtered by current user)
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ShopEntryListPage(onlyMy: true)),
+                );
+            },
+          ),
         ],
       ),
     );
